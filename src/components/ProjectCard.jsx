@@ -1,8 +1,13 @@
 // src/components/ProjectCard.jsx
 import React from 'react';
 import { Play } from 'lucide-react';
+import { parseVideo } from '../utils/video';
 
 const ProjectCard = ({ project, onClick, index = 1 }) => {
+  const video = parseVideo(project.link);
+  const thumb = project.thumbnail || video?.thumbnail;
+  const badge = video?.platform === 'instagram' ? 'IG' : video?.platform === 'youtube' ? 'YT' : null;
+
   return (
     <button
       onClick={onClick}
@@ -19,10 +24,10 @@ const ProjectCard = ({ project, onClick, index = 1 }) => {
       </div>
 
       {/* Thumbnail */}
-      <div className="relative flex-grow bg-surface">
-        {project.thumbnail ? (
+      <div className="relative flex-grow overflow-hidden bg-surface">
+        {thumb ? (
           <img
-            src={project.thumbnail}
+            src={thumb}
             alt={project.title}
             className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
           />
@@ -32,7 +37,14 @@ const ProjectCard = ({ project, onClick, index = 1 }) => {
           </div>
         )}
 
-        {/* Play button: always visible, flips colour on hover */}
+        {/* Platform badge */}
+        {badge && (
+          <span className="absolute right-3 top-3 border-2 border-white bg-base px-2 py-1 text-xs font-black uppercase tracking-widest text-white">
+            {badge}
+          </span>
+        )}
+
+        {/* Play button */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="flex h-16 w-16 items-center justify-center border-4 border-white bg-base text-white shadow-[4px_4px_0_0_#ffffff] transition-colors group-hover:bg-accent group-hover:text-black">
             <Play size={28} strokeWidth={3} fill="currentColor" />
